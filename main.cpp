@@ -1,4 +1,5 @@
 #include "instructions.h"
+#include "assembler.h"
 #include <iostream>
 #include <vector>
 
@@ -48,6 +49,18 @@ int main(int argc, char* argv[]) {
   initPrograms(programs);
   initAdjustedFilePaths(filePaths, argc, argv);
   
+  assembleManyPrograms(programs, filePaths);
+
+  // print toda a tabela de simbolos
+  for (const auto& prog : programs) {
+    cout << "Program Symbol Table:" << endl;
+    for (const auto& entry : prog.symbolTable) {
+      cout << "Name: " << entry.name 
+           << ", Type: " << (entry.type == SYMBOL_LABEL ? "Label" : "Variable") 
+           << ", Address: " << entry.memoryAddress << endl;
+    }
+    cout << endl;
+  }
 
   return 0;
 }
