@@ -51,16 +51,28 @@ int main(int argc, char* argv[]) {
   
   assembleManyPrograms(programs, filePaths);
 
-  // print toda a tabela de simbolos
   for (const auto& prog : programs) {
-    cout << "Program Symbol Table:" << endl;
-    for (const auto& entry : prog.symbolTable) {
-      cout << "Name: " << entry.name 
-           << ", Type: " << (entry.type == SYMBOL_LABEL ? "Label" : "Variable") 
-           << ", Address: " << entry.memoryAddress << endl;
+    cout << "Program Memory: " << endl;
+    for (const auto& cell : prog.memory) {
+      if (cell.type == MEM_INSTRUCTION) {
+        cout << "Instruction: " << cell.instr.opcode << " "
+             << cell.instr.operand1 << " "
+             << cell.instr.operand2 << " "
+             << cell.instr.operand3 << endl;
+      } else {
+        cout << "Data: " << cell.value << endl;
+      }
     }
-    cout << endl;
+    cout << "Symbol Table: " << endl;
+    for (const auto& entry : prog.symbolTable) {
+      cout << entry.name << " (" 
+           << (entry.type == SYMBOL_LABEL ? "Label" : "Variable") 
+           << ") at address: " 
+           << entry.memoryAddress << endl;
+    }
   }
+
+  
 
   return 0;
 }

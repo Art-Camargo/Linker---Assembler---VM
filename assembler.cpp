@@ -33,7 +33,6 @@ bool symbolExistsGlobally(const vector<AssembledProgram>& programs, int currentI
   return false;
 }
 
-
 void restartFile(ifstream& file) {
     file.clear(); 
     file.seekg(0, ios::beg); 
@@ -62,12 +61,97 @@ ifstream getFile(const string& filePath) {
     return file;
 }
 
-void secondPass(AssembledProgram& prog, ifstream& file, int initOfProgram) {
+int registerToCode(const string& reg) {
+  if (reg == "A0") return 0;
+  if (reg == "A1") return 1;
+  if (reg == "A2") return 2;
+  if (reg == "A3") return 3;
+
+  cout << "Error: Invalid register '" << reg << "'" << endl;
+  exit(EXIT_FAILURE);
+}
+
+int getValueByNameIgnoringType(const vector<AssembledProgram>& programs, int currentIndex, const string& name) {
+  for (int i = 0; i < currentIndex; ++i) {
+      for (const auto& entry : programs[i].symbolTable) {
+          if (entry.name == name) {
+              return entry.memoryAddress;
+          }
+      }
+  }
+  cout << "Error: Undefined symbol '" << name << "'" << endl;
+  exit(EXIT_FAILURE);
+}
+
+
+
+void dispatchInstruction(vector<AssembledProgram>& programs, int currentIndex, const string& opcodeStr, const string& op1, const string& op2, const string& op3, int position) {
+  
+  if (programs[currentIndex].memory.size() <= (size_t)position) {
+    programs[currentIndex].memory.resize(position + 1);
+  }
+  
+  int opcode = convertMnemonicToOpcode(opcodeStr);
+  Instruction instr; 
+  instr.opcode = opcode;
+  if (opcodeStr == "ADD" || opcodeStr == "SUB" || opcodeStr == "MUL" || opcodeStr == "DIV") {
+      instr.operand1 = registerToCode(op1);
+      instr.operand2 = registerToCode(op2);
+      instr.operand3 = registerToCode(op3);
+  } else if (opcodeStr == "MV") {
+      instr.operand1 = registerToCode(op1);
+      instr.operand2 = getValueByNameIgnoringType(programs, position, op2);
+  } else if (opcodeStr == "ST") {
+      instr.operand1 = getValueByNameIgnoringType(programs, position, op1);
+      instr.operand2 = registerToCode(op2);
+  } else if (opcodeStr == "JMP") {
+      instr.operand1 = getValueByNameIgnoringType(programs, position, op1); 
+  } else if (opcodeStr == "JLT" || opcodeStr == "JGT" || opcodeStr == "JEQ") {
+      instr.operand1 = registerToCode(op1);
+      instr.operand2 = registerToCode(op2);
+      instr.operand3 = getValueByNameIgnoringType(programs, position, op3); 
+  } else if (opcodeStr == "R" || opcodeStr == "W") {
+      instr.operand1 = getValueByNameIgnoringType(programs, position, op1);
+  } else if (opcodeStr == "STP") {
+    return;
+  } else {
+      cout << "Error: Unknown instruction '" << opcodeStr << "'" << endl;
+      exit(EXIT_FAILURE);
+  }
+
+  if (opcodeStr != "ADD" && opcodeStr != "SUB" && opcodeStr != "MUL" && opcodeStr != "DIV" && opcodeStr != "JLT" && opcodeStr != "JGT" && opcodeStr != "JEQ") {
+      instr.operand3 = -1; 
+  } 
+  
+  if (opcodeStr == "R" || opcodeStr == "W" || opcodeStr == "JMP") {
+      instr.operand2 = -1; 
+  }
+
+  MemoryCell cell;
+  cell.type = MEM_INSTRUCTION;
+  cell.instr = instr;
+  programs[currentIndex].memory[position] = cell;
+}
+
+
+void secondPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& file, int initOfProgram) {
     string line;
     int lineNumber = 0;
 
     while (getline(file, line) && lineNumber < MEMORY_SIZE) {
+      if (!line.empty()) {
+        istringstream iss(trim(line));
+        string opcode, op1, op2, op3;
+        iss >> opcode >> op1 >> op2 >> op3;
+        
+        if (convertMnemonicToOpcode(opcode) != NOP) {
+          cout << "INICIO DO PROGRAMA" << initOfProgram << endl;
+          cout << "Linha: " << line << endl;
+          dispatchInstruction(programs, currentIndex, opcode, op1, op2, op3, initOfProgram++);
+        }
         lineNumber++;
+      }
+
     }
 }
 
@@ -154,7 +238,7 @@ void readProgram(vector<AssembledProgram>& programs, int currentIndex, const str
 
   firstPass(programs, currentIndex, file, &initOfProgram);
   restartFile(file);
-  secondPass(programs[currentIndex], file, initOfProgram);  
+  secondPass(programs, currentIndex, file, initOfProgram);  
 
   file.close();
 }

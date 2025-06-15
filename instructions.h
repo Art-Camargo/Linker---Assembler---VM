@@ -32,6 +32,7 @@ typedef struct {
   int operand1;
   int operand2;
   int operand3;
+  
 } Instruction;
 
 typedef struct {
