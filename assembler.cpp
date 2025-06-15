@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <vector>
 #include <sstream>
 #include "instructions.h"
@@ -59,6 +60,11 @@ ifstream getFile(const string& filePath) {
       exit(EXIT_FAILURE);
     }
     return file;
+}
+
+void copyStringToCharArray(const string& str, char* destination, size_t maxLength) {
+  strncpy(destination, str.c_str(), maxLength - 1);
+  destination[maxLength - 1] = '\0';  
 }
 
 int registerToCode(const string& reg) {
@@ -130,6 +136,21 @@ void dispatchInstruction(vector<AssembledProgram>& programs, int currentIndex, c
   MemoryCell cell;
   cell.type = MEM_INSTRUCTION;
   cell.instr = instr;
+
+  if (opcodeStr == "JMP"  || opcodeStr == "W" || opcodeStr == "ST" || opcodeStr == "R") {
+    copyStringToCharArray(op1, cell.labelToLinker, sizeof(cell.labelToLinker));
+    cell.operandToLinker = 1;
+  } else if (opcodeStr == "MV") {
+    copyStringToCharArray(op2, cell.labelToLinker, sizeof(cell.labelToLinker));
+    cell.operandToLinker = 2;
+  } else if (opcodeStr == "JLT" || opcodeStr == "JGT" || opcodeStr == "JEQ") {
+    copyStringToCharArray(op3, cell.labelToLinker, sizeof(cell.labelToLinker));
+    cell.operandToLinker = 3;
+  } else {
+    cell.labelToLinker[0] = '\0'; 
+    cell.operandToLinker = -1;
+  }
+  
   programs[currentIndex].memory[position] = cell;
 }
 
@@ -145,8 +166,6 @@ void secondPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& 
         iss >> opcode >> op1 >> op2 >> op3;
         
         if (convertMnemonicToOpcode(opcode) != NOP) {
-          cout << "INICIO DO PROGRAMA" << initOfProgram << endl;
-          cout << "Linha: " << line << endl;
           dispatchInstruction(programs, currentIndex, opcode, op1, op2, op3, initOfProgram++);
         }
         lineNumber++;

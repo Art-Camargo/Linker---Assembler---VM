@@ -37,6 +37,8 @@ typedef struct {
 
 typedef struct {
   MemoryType type;  
+  char labelToLinker[30]; 
+  int operandToLinker;
   union {
       int value;          
       Instruction instr;   

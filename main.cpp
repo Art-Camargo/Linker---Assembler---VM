@@ -45,34 +45,14 @@ int main(int argc, char* argv[]) {
   const int totalPrograms = getTotalPrograms(argc);
   vector<AssembledProgram> programs(totalPrograms);
   vector<string> filePaths;
+  AssembledProgram linkedProgram;
+  linkedProgram.memory.reserve(MEMORY_SIZE * totalPrograms);
+  linkedProgram.symbolTable.reserve(MAX_SYMBOLS * totalPrograms); 
 
   initPrograms(programs);
   initAdjustedFilePaths(filePaths, argc, argv);
   
   assembleManyPrograms(programs, filePaths);
-
-  for (const auto& prog : programs) {
-    cout << "Program Memory: " << endl;
-    for (const auto& cell : prog.memory) {
-      if (cell.type == MEM_INSTRUCTION) {
-        cout << "Instruction: " << cell.instr.opcode << " "
-             << cell.instr.operand1 << " "
-             << cell.instr.operand2 << " "
-             << cell.instr.operand3 << endl;
-      } else {
-        cout << "Data: " << cell.value << endl;
-      }
-    }
-    cout << "Symbol Table: " << endl;
-    for (const auto& entry : prog.symbolTable) {
-      cout << entry.name << " (" 
-           << (entry.type == SYMBOL_LABEL ? "Label" : "Variable") 
-           << ") at address: " 
-           << entry.memoryAddress << endl;
-    }
-  }
-
-  
 
   return 0;
 }
