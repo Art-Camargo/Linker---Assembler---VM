@@ -108,7 +108,7 @@ A arquitetura definida neste projeto utiliza instruções simples e diretas, com
 | `R`       | 11     | Lê da entrada um valor para uma variável                                  |
 | `STP`     | 12     | Interrompe a execução do programa                                          |
 
-> **Observação:** Os saltos (`JMP`, `JEQ`, `JGT`, `JLT`) operam sobre endereços de instrução, não variáveis.
+> **Observação:** Os saltos (`JMP`, `JEQ`, `JGT`, `JLT`) operam sobre endereços de instrução (LABELS), não variáveis.
 
 
 ## Linkagem
