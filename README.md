@@ -40,7 +40,7 @@ Isso gera o executável `main`.
 ## Execução
 
 ```bash
-./main programs/teste1.asm programs/teste2.asm
+./main p1.txt p2.txt
 ```
 
 A saída será o código linkado em memória e executado pela VM.
