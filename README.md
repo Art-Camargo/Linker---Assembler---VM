@@ -7,7 +7,7 @@ Este projeto implementa um **assembler**, **linker** e **máquina virtual** para
 
 ## Funcionalidades
 
-- **Assembler**: Lê arquivos `.asm` contendo variáveis, labels e instruções, e gera uma estrutura intermediária.
+- **Assembler**: Lê arquivos `.txt` contendo variáveis, labels e instruções, e gera uma estrutura intermediária.
 - **Linker**: Recebe múltiplos arquivos montados, resolve labels globais e locais, e combina tudo em duas memórias finais:  
   *Memória de Instruções* e *Memória de Dados*.
 - **VM (Máquina Virtual)**: Executa os binários gerados, interpretando a ISA definida para o projeto.
