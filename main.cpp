@@ -1,7 +1,10 @@
 #include "instructions.h"
 #include "assembler.h"
+#include "linker.h"
+#include "vm.h"
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 #define PROGRAMS_DIR "./programs/"
 
@@ -41,18 +44,31 @@ void initAdjustedFilePaths(vector<string>& filePaths, int argc, char* argv[]) {
   }
 }
 
+
 int main(int argc, char* argv[]) {
   const int totalPrograms = getTotalPrograms(argc);
   vector<AssembledProgram> programs(totalPrograms);
   vector<string> filePaths;
-  AssembledProgram linkedProgram;
+  LinkedProgram linkedProgram;
   linkedProgram.memory.reserve(MEMORY_SIZE * totalPrograms);
   linkedProgram.symbolTable.reserve(MAX_SYMBOLS * totalPrograms); 
+  linkedProgram.dataMemory.reserve(MEMORY_SIZE * totalPrograms);
 
   initPrograms(programs);
   initAdjustedFilePaths(filePaths, argc, argv);
   
   assembleManyPrograms(programs, filePaths);
+  linkerFirstPass(programs, linkedProgram);
+  linkerSecondPass(programs, linkedProgram);
+
+  printSymbolTable(linkedProgram);
+  printDataMemory(linkedProgram);
+  printInstructionMemory(linkedProgram);
+  cout << "Starting VM..." << endl << endl;
+
+  vm(linkedProgram);
+
+
 
   return 0;
 }

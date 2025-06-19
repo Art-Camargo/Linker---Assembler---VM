@@ -20,6 +20,8 @@ int convertMnemonicToOpcode(const string& mnemonic) {
     if (mnemonic == "JGT") return JGT;
     if (mnemonic == "JLT") return JLT;
     if (mnemonic == "W") return W;
+    if (mnemonic == "R") return R;
+    if (mnemonic == "STP") return STP;
     return NOP;
 }
 
@@ -119,7 +121,9 @@ void dispatchInstruction(vector<AssembledProgram>& programs, int currentIndex, c
   } else if (opcodeStr == "R" || opcodeStr == "W") {
       instr.operand1 = getValueByNameIgnoringType(programs, position, op1);
   } else if (opcodeStr == "STP") {
-    return;
+      instr.operand1 = -1;
+      instr.operand2 = -1;
+      instr.operand3 = -1;
   } else {
       cout << "Error: Unknown instruction '" << opcodeStr << "'" << endl;
       exit(EXIT_FAILURE);
@@ -138,16 +142,16 @@ void dispatchInstruction(vector<AssembledProgram>& programs, int currentIndex, c
   cell.instr = instr;
 
   if (opcodeStr == "JMP"  || opcodeStr == "W" || opcodeStr == "ST" || opcodeStr == "R") {
-    copyStringToCharArray(op1, cell.labelToLinker, sizeof(cell.labelToLinker));
+    cell.labelToLinker = op1;
     cell.operandToLinker = 1;
   } else if (opcodeStr == "MV") {
-    copyStringToCharArray(op2, cell.labelToLinker, sizeof(cell.labelToLinker));
+    cell.labelToLinker = op2;
     cell.operandToLinker = 2;
   } else if (opcodeStr == "JLT" || opcodeStr == "JGT" || opcodeStr == "JEQ") {
-    copyStringToCharArray(op3, cell.labelToLinker, sizeof(cell.labelToLinker));
+    cell.labelToLinker = op3;
     cell.operandToLinker = 3;
   } else {
-    cell.labelToLinker[0] = '\0'; 
+    cell.labelToLinker = ""; 
     cell.operandToLinker = -1;
   }
   

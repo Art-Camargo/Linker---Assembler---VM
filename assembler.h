@@ -21,7 +21,7 @@ void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, cons
 void dispatchLabel(vector<AssembledProgram>& programs, int currentIndex, const string& label, int lineNumber);
 
 void firstPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& file, int *initOfProgram);
-void secondPass(AssembledProgram& prog, ifstream& file, int initOfProgram);
+void secondPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& file, int initOfProgram);
 void readProgram(vector<AssembledProgram>& programs, int currentIndex, const string& filePath);
 void assembleManyPrograms(vector<AssembledProgram>& programs, const vector<string>& filePaths);
 

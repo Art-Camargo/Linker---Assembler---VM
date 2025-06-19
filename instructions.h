@@ -37,7 +37,7 @@ typedef struct {
 
 typedef struct {
   MemoryType type;  
-  char labelToLinker[30]; 
+  string labelToLinker; 
   int operandToLinker;
   union {
       int value;          
@@ -49,6 +49,12 @@ typedef struct {
     vector<MemoryCell> memory;
     vector<SymbolTableEntry> symbolTable;
 } AssembledProgram;
+
+typedef struct {
+    vector<int> dataMemory;
+    vector<SymbolTableEntry> symbolTable;
+    vector<Instruction> memory;
+} LinkedProgram;
 
 enum Intructions {
   NOP = -1,
@@ -64,7 +70,7 @@ enum Intructions {
   JLT,
   W,
   R,
-  STOP
+  STP
 };
 
 #endif
