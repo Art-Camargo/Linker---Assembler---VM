@@ -26,28 +26,28 @@ void alu(int opcode, int registers[], int operand1, int operand2, int operand3) 
   }
 }
 
-void handleJump(int opcode, int registers[], unsigned int* pc, int operand1, int operand2, int operand3, vector<int>& dataMemory) {
+void handleJump(int opcode, int registers[], unsigned int* pc, int operand1, int operand2, int operand3) {
   switch (opcode) {
     case JMP:
-      *pc = dataMemory[operand1];
+      *pc = operand1; 
       break;
     case JEQ:
       if (registers[operand1] == registers[operand2]) {
-        *pc = dataMemory[operand3];
+        *pc = operand3;
       } else {
         (*pc)++;
       }
       break;
     case JGT:
       if (registers[operand1] > registers[operand2]) {
-        *pc = dataMemory[operand3];
+        *pc = operand3;
       } else {
         (*pc)++;
       }
       break;
     case JLT:
       if (registers[operand1] < registers[operand2]) {
-        *pc = dataMemory[operand3];
+        *pc = operand3;
       } else {
         (*pc)++;
       }
@@ -76,7 +76,7 @@ void dispatch(const Instruction& instruction, int registers[], vector<int>& data
     case JEQ:
     case JGT:
     case JLT:
-      handleJump(instruction.opcode, registers, &pc, instruction.operand1, instruction.operand2, instruction.operand3, dataMemory);
+      handleJump(instruction.opcode, registers, &pc, instruction.operand1, instruction.operand2, instruction.operand3);
       break;
     case W: {
       int value;
@@ -92,7 +92,6 @@ void dispatch(const Instruction& instruction, int registers[], vector<int>& data
       break;
     case STP:
       cout << "Program stopped." << endl;
-      // Não incrementa PC para que o loop pare
       break;
   }
 }

@@ -87,8 +87,8 @@ int getValueByNameIgnoringType(const vector<AssembledProgram>& programs, int cur
           }
       }
   }
-  cout << "Error: Undefined symbol '" << name << "'" << endl;
-  exit(EXIT_FAILURE);
+  cout << "Warnning: Variable or label '" << name << "' not found. Returning -1." << endl;
+  return -1;
 }
 
 
