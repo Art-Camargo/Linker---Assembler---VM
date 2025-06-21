@@ -26,6 +26,7 @@ typedef struct {
     SymbolType type;
     int memoryAddress;
     ScopeType scope;
+    int programIndex; 
 } SymbolTableEntry;
 
 typedef enum {

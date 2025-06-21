@@ -1,3 +1,1 @@
-SUM:
-  ADD A0 A0 A2
-  JMP LOOP
+MV A3 p

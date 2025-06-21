@@ -178,7 +178,7 @@ void secondPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& 
     }
 }
 
-void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, const string& varName, int value, int lineNumber) {
+void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, const string& varName, int value, int lineNumber, int scopeType) {
   if (symbolExistsGlobally(programs, currentIndex, varName, SYMBOL_VARIABLE)) {
       cout << "Error: Duplicate variable '" << varName << "' at line " << lineNumber << endl;
       exit(EXIT_FAILURE);
@@ -188,15 +188,19 @@ void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, cons
 
   int memoryPosition = prog.memory.size();
 
+  ScopeType scope = static_cast<ScopeType>(scopeType);
+
   MemoryCell cell;
   cell.type = MEM_DATA;
   cell.value = value;
+  cell.scope = scope;
   prog.memory.push_back(cell);
 
   SymbolTableEntry entry;
   entry.name = varName;
   entry.type = SYMBOL_VARIABLE;
   entry.memoryAddress = memoryPosition; 
+  entry.scope = scope;
   prog.symbolTable.push_back(entry);
 }
 
@@ -229,8 +233,8 @@ void firstPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& f
 
       if (!line.empty()) {
           istringstream iss(trim(line));
-          string token, varName, value;
-          iss >> token >> varName >> value;
+          string token, varName, value, scope;
+          iss >> token >> varName >> value >> scope;
 
           if (token.back() == ':' && token.size() > 1) {
               dispatchLabel(programs, currentIndex, token, instructionCount);
@@ -239,7 +243,8 @@ void firstPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& f
                   cout << "Error: Invalid WORD declaration at line " << lineNumber << endl;
                   exit(EXIT_FAILURE);
               }
-              dispatchVariable(programs, currentIndex, varName, stoi(value), wordCount++);
+              int scopeType = scope == "global" ? SCOPE_GLOBAL : SCOPE_LOCAL;
+              dispatchVariable(programs, currentIndex, varName, stoi(value), wordCount++, scopeType);
           } else if (convertMnemonicToOpcode(token) != NOP) {
               instructionCount++;
           }

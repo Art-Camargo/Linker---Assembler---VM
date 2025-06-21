@@ -64,7 +64,6 @@ int main(int argc, char* argv[]) {
   printSymbolTable(linkedProgram);
   printDataMemory(linkedProgram);
   printInstructionMemory(linkedProgram);
-  cout << "Starting VM..." << endl << endl;
 
   vm(linkedProgram);
 
