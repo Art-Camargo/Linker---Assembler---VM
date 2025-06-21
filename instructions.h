@@ -16,10 +16,16 @@ enum SymbolType {
     SYMBOL_VARIABLE
 };
 
+enum  ScopeType {
+    SCOPE_GLOBAL,
+    SCOPE_LOCAL,
+    SCOPE_NONE
+};
 typedef struct {
     string name;
     SymbolType type;
     int memoryAddress;
+    ScopeType scope;
 } SymbolTableEntry;
 
 typedef enum {
@@ -39,6 +45,8 @@ typedef struct {
   MemoryType type;  
   string labelToLinker; 
   int operandToLinker;
+  ScopeType scope;
+
   union {
       int value;          
       Instruction instr;   

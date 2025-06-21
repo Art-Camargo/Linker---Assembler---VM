@@ -1,0 +1,14 @@
+WORD p 2
+WORD total 10
+WORD inc 2
+MV A0 p
+MV A1 total
+MV A2 inc
+
+
+LOOP:
+  JEQ A0 A1 STOP
+  JMP SUM
+
+STOP:
+  STP
