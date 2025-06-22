@@ -1,0 +1,3 @@
+WORD var 20
+MV A2 var
+STP

@@ -6,6 +6,15 @@
 
 using namespace std;
 
+SymbolTableEntry findSymbolInLinkedProgram(const LinkedProgram& linkedProgram, const string& name, int programIndex) {
+    for (const auto& entry : linkedProgram.symbolTable) {
+        if (entry.name == name ) {
+            return entry;
+        }
+    }
+    return SymbolTableEntry{"", SYMBOL_VARIABLE, -1, SCOPE_NONE, -1}; 
+}
+
 void linkerFirstPass(const vector<AssembledProgram>& programs, LinkedProgram& linkedProgram) {
   int dataAddressCursor = 0;
   int codeOffset = 0;
@@ -23,6 +32,20 @@ void linkerFirstPass(const vector<AssembledProgram>& programs, LinkedProgram& li
 
       for (const auto& entry : prog.symbolTable) {
           if (entry.type == SYMBOL_VARIABLE) {
+              const SymbolTableEntry& existingEntry = findSymbolInLinkedProgram(linkedProgram, entry.name, currentProgramIndex);
+              if (existingEntry.name != "") {
+                if (existingEntry.scope != entry.scope) {
+                    cerr << "Erro: símbolo '" << entry.name 
+                         << "' já declarado com escopo diferente no programa " 
+                         << currentProgramIndex << ".\n";
+                    exit(EXIT_FAILURE);
+                }  else if (existingEntry.scope == SCOPE_GLOBAL) {
+                    cerr << "Erro: símbolo '" << entry.name 
+                    << "' já declarado com escopo global no programa " 
+                    << currentProgramIndex << ".\n";
+                    exit(EXIT_FAILURE);
+                }
+              }
               SymbolTableEntry adjusted = entry;
               adjusted.memoryAddress += dataAddressCursor;
               adjusted.programIndex = currentProgramIndex;
@@ -111,7 +134,13 @@ void linkerSecondPass(const vector<AssembledProgram>& programs, LinkedProgram& l
                     exit(EXIT_FAILURE);
                 }
             }
-  
+            cout << "Linking instruction at program " << currentProgramIndex 
+                 << ", address " << instructionCursor 
+                 << ": " << instr.opcode 
+                 << " " << instr.operand1 
+                 << " " << instr.operand2 
+                 << " " << instr.operand3 
+                 << endl;
             linkedProgram.memory.push_back(instr);
             ++instructionCursor;
         }

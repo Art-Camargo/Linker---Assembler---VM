@@ -178,7 +178,23 @@ void secondPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& 
     }
 }
 
+bool variableExistsInCurrentProgram(const vector<AssembledProgram>& programs, int currentIndex, const string& varName) {
+  const AssembledProgram& prog = programs[currentIndex];
+  for (const auto& entry : prog.symbolTable) {
+      if (entry.name == varName && entry.type == SYMBOL_VARIABLE) {
+          return true;
+      }
+  }
+
+  return false;
+}
+
 void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, const string& varName, int value, int lineNumber, int scopeType) {
+  if (variableExistsInCurrentProgram(programs, currentIndex, varName)) {
+    cout << "Error: Variable '" << varName << "' already declared in the current program." << endl;
+    exit(EXIT_FAILURE);
+  }
+
   AssembledProgram& prog = programs[currentIndex];
 
   int memoryPosition = prog.memory.size();
@@ -212,6 +228,7 @@ void dispatchLabel(vector<AssembledProgram>& programs, int currentIndex, const s
   entry.scope = SCOPE_GLOBAL;
   prog.symbolTable.push_back(entry);
 }
+
 
 void firstPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& file, int *initOfProgram) {
   AssembledProgram& prog = programs[currentIndex];

@@ -61,9 +61,9 @@ int main(int argc, char* argv[]) {
   linkerFirstPass(programs, linkedProgram);
   linkerSecondPass(programs, linkedProgram);
 
-  printSymbolTable(linkedProgram);
-  printDataMemory(linkedProgram);
-  printInstructionMemory(linkedProgram);
+  // printSymbolTable(linkedProgram);
+  // printDataMemory(linkedProgram);
+  // printInstructionMemory(linkedProgram);
 
   vm(linkedProgram);
 
