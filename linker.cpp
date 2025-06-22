@@ -22,7 +22,6 @@ void linkerFirstPass(const vector<AssembledProgram>& programs, LinkedProgram& li
       int localInstructionCount = (int)prog.memory.size() - localDataSize;
 
       for (const auto& entry : prog.symbolTable) {
-        cout <<  entry.scope << endl;
           if (entry.type == SYMBOL_VARIABLE) {
               SymbolTableEntry adjusted = entry;
               adjusted.memoryAddress += dataAddressCursor;

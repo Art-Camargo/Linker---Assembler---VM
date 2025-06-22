@@ -1,6 +1,1 @@
-WORD p 2 global
-WORD total 10
-WORD inc 2
-MV A0 p
-MV A1 total
-MV A2 inc
+JMP SEILA

@@ -179,11 +179,6 @@ void secondPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& 
 }
 
 void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, const string& varName, int value, int lineNumber, int scopeType) {
-  if (symbolExistsGlobally(programs, currentIndex, varName, SYMBOL_VARIABLE)) {
-      cout << "Error: Duplicate variable '" << varName << "' at line " << lineNumber << endl;
-      exit(EXIT_FAILURE);
-  }
-
   AssembledProgram& prog = programs[currentIndex];
 
   int memoryPosition = prog.memory.size();
@@ -207,10 +202,6 @@ void dispatchVariable(vector<AssembledProgram>& programs, int currentIndex, cons
 
 void dispatchLabel(vector<AssembledProgram>& programs, int currentIndex, const string& label, int lineNumber) {
   string labelName = label.substr(0, label.size() - 1);
-  if (symbolExistsGlobally(programs, currentIndex, labelName, SYMBOL_LABEL)) {
-      cout << "Error: Duplicate label '" << labelName << "' at line " << lineNumber << endl;
-      exit(EXIT_FAILURE);
-  }
 
   AssembledProgram& prog = programs[currentIndex];
 
@@ -218,6 +209,7 @@ void dispatchLabel(vector<AssembledProgram>& programs, int currentIndex, const s
   entry.name = labelName;
   entry.type = SYMBOL_LABEL;
   entry.memoryAddress = lineNumber;
+  entry.scope = SCOPE_GLOBAL;
   prog.symbolTable.push_back(entry);
 }
 
