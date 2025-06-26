@@ -1,0 +1,13 @@
+COLA_AQ:
+  MV A0 num1
+  MV A1 num2
+
+
+
+LOOP:
+  JLT A0 A1 FIM
+  SUB A0 A0 A1
+  JMP LOOP
+
+
+

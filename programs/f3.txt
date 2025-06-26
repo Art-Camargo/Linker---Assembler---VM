@@ -1,0 +1,2 @@
+WORD variavel1 10 global
+MV A1 variavel1

@@ -134,13 +134,13 @@ void linkerSecondPass(const vector<AssembledProgram>& programs, LinkedProgram& l
                     exit(EXIT_FAILURE);
                 }
             }
-            cout << "Linking instruction at program " << currentProgramIndex 
-                 << ", address " << instructionCursor 
-                 << ": " << instr.opcode 
-                 << " " << instr.operand1 
-                 << " " << instr.operand2 
-                 << " " << instr.operand3 
-                 << endl;
+            // cout << "Linking instruction at program " << currentProgramIndex 
+            //      << ", address " << instructionCursor 
+            //      << ": " << instr.opcode 
+            //      << " " << instr.operand1 
+            //      << " " << instr.operand2 
+            //      << " " << instr.operand3 
+            //      << endl;
             linkedProgram.memory.push_back(instr);
             ++instructionCursor;
         }

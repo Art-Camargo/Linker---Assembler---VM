@@ -80,7 +80,7 @@ void dispatch(const Instruction& instruction, int registers[], vector<int>& data
       break;
     case W: {
       int value;
-      cout << "Enter value for register " << instruction.operand1 << ": ";
+      cout << "Enter value for position " << instruction.operand1 << ": ";
       cin >> value;
       dataMemory[instruction.operand1] = value;
       pc++;
@@ -110,11 +110,11 @@ void run(const vector<Instruction>& instructionMemory, vector<int>& dataMemory) 
 
   while (pc < instructionMemory.size() && pc < MEMORY_SIZE && instructionMemory[pc].opcode != STP) {
     const Instruction& instruction = instructionMemory[pc];
-    cout << "Executing instruction at PC: " << pc << endl;
-    cout << "Instruction: " << instruction.opcode << " "
-         << instruction.operand1 << " "
-         << instruction.operand2 << " "
-         << instruction.operand3 << endl;
+    // cout << "Executing instruction at PC: " << pc << endl;
+    // cout << "Instruction: " << instruction.opcode << " "
+    //      << instruction.operand1 << " "
+    //      << instruction.operand2 << " "
+    //      << instruction.operand3 << endl;
 
     dispatch(instruction, registers, dataMemory, pc);
   }

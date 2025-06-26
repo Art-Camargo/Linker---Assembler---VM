@@ -43,12 +43,16 @@ void restartFile(ifstream& file) {
 
 string trim_left(const string& str) {
   const string pattern = " \f\n\r\t\v";
-  return str.substr(str.find_first_not_of(pattern));
+  size_t start = str.find_first_not_of(pattern);
+  if (start == string::npos) return "";
+  return str.substr(start);
 }
 
 string trim_right(const string& str) {
   const string pattern = " \f\n\r\t\v";
-  return str.substr(0,str.find_last_not_of(pattern) + 1);
+  size_t end = str.find_last_not_of(pattern);
+  if (end == string::npos) return "";
+  return str.substr(0, end + 1);
 }
 
 string trim(const string& str) {
@@ -239,12 +243,12 @@ void firstPass(vector<AssembledProgram>& programs, int currentIndex, ifstream& f
 
   while (getline(file, line) && lineNumber < MEMORY_SIZE) {
       lineNumber++;
-
+   
       if (!line.empty()) {
           istringstream iss(trim(line));
           string token, varName, value, scope;
           iss >> token >> varName >> value >> scope;
-
+          cout << "Processing line " << lineNumber << ": " << line << endl;
           if (token.back() == ':' && token.size() > 1) {
               dispatchLabel(programs, currentIndex, token, instructionCount);
           } else if (token == "WORD") {

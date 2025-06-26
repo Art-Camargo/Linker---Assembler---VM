@@ -56,14 +56,14 @@ int main(int argc, char* argv[]) {
 
   initPrograms(programs);
   initAdjustedFilePaths(filePaths, argc, argv);
-  
   assembleManyPrograms(programs, filePaths);
+
   linkerFirstPass(programs, linkedProgram);
   linkerSecondPass(programs, linkedProgram);
 
-  // printSymbolTable(linkedProgram);
-  // printDataMemory(linkedProgram);
-  // printInstructionMemory(linkedProgram);
+  printSymbolTable(linkedProgram);
+  printDataMemory(linkedProgram);
+  printInstructionMemory(linkedProgram);
 
   vm(linkedProgram);
 

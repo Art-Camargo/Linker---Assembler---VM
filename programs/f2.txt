@@ -1,0 +1,3 @@
+WORD variavel1 20
+MV A2 variavel1
+STP

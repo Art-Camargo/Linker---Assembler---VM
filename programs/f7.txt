@@ -1,0 +1,12 @@
+WORD var1 0 global
+WORD var2 0 global
+
+W var1
+W var2
+
+MV A0 var1
+MV A1 var2
+
+JLT A0 A1 MULTIPLICA
+JEQ A0 A1 DIVIDE
+JMP SOMA
