@@ -1,2 +1,2 @@
-WORD variavel1 10 
+WORD variavel1 10
 MV A1 variavel1
